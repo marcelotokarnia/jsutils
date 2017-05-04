@@ -33,7 +33,7 @@ angular.module('orderable_table').directive('orderableTable', function(){
             tableFilter: '&?',
             onchangeSelection: '&?',
         },
-        templateUrl: APP.BASE_URL+'components/orderable_table/orderable_table.html',
+        templateUrl: BASE_URL+'/orderable-table/orderable-table.html',
         controller: function($scope, $filter){
             var unregister = $scope.$watch('options', function(){
                 if (!$scope.order_by && $scope.options && $scope.options.columns && $scope.options.columns.length){
