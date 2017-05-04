@@ -1,0 +1,43 @@
+<table class="table table-striped full-page top20">
+    <thead>
+        <tr>
+            <th ng-repeat="clmn in options.columns track by $index" width="{[{clmn.width}]}">
+                <div ng-if="clmn.show_filter_button && onchangeFilters"><button ng-click="onchangeFilters()">Editar filtros</button></div>
+                <a href ng-if="clmn.checkbox" ng-click="toggle_select_all()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+                <label ng-click="sort_by(clmn)">
+                    {[{clmn.header}]}
+                    <span ng-show="clmn.value === order_by || clmn.ordered_value === order_by"
+                          class="glyphicon"
+                          ng-class="{'glyphicon-chevron-up': reverse, 'glyphicon-chevron-down': !reverse}"
+                          aria-hidden="true"></span>
+                </label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="item in items | filter: filter_items | orderBy: order_by: reverse track by item[options.track_by || 'id']"
+            ng-class="{'active-pointer': options.clickable, 'all-bold': options.item_bold && options.item_bold(item)}">
+            <td ng-repeat="clmn in options.columns track by clmn.header"
+                width="{[{clmn.width}]}"
+                ng-class="{'dropdown': clmn.menu}"
+                ng-click="options.clickable && !clmn.checkbox && !clmn.menu && clmn.click && clmn.click(item)">
+                <a ng-if="clmn.menu"
+                   class="pull-left dropdown-toggle"
+                   data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-option-vertical"></span>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="opt in clmn.menu track by $index" ng-click="opt.action(item)">
+                            <a href ng-bind="opt.label"></a>
+                        </li>
+                    </ul>
+                </a>
+                <input class="form-check-input"
+                       type="checkbox" ng-model="item.selected"
+                       ng-change="onchangeSelection()" ng-if="clmn.checkbox">
+                <div ng-if="!clmn.span_classes && !clmn.bold" ng-bind="clmn.value(item)"></div>
+                <label ng-if="!clmn.span_classes && clmn.bold" ng-bind="clmn.value(item)"></label>
+                <span ng-if="clmn.span_classes" ng-class="clmn.span_classes(item)" ng-bind="clmn.value(item)"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
