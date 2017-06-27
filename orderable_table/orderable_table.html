@@ -1,0 +1,60 @@
+<div>
+    <table class="table table-striped full-page top20">
+        <thead>
+            <tr>
+                <th ng-repeat="clmn in options.columns track by $index" width="{[{clmn.width}]}">
+                    <div ng-if="clmn.show_filter_button && onchangeFilters">
+                        <button class="btn" ng-click="onchangeFilters()">
+                            <span class="glyphicon glyphicon-filter"></span>
+                        </button>
+                    </div>
+                    <a href ng-if="clmn.checkbox" ng-click="toggle_select_all()">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </a>
+                    <label ng-click="sort_by(clmn)">
+                        {[{clmn.header}]}
+                        <span ng-show="clmn.value === order_by || clmn.ordered_value === order_by"
+                              class="glyphicon"
+                              ng-class="{'glyphicon-chevron-up': reverse, 'glyphicon-chevron-down': !reverse}"
+                              aria-hidden="true">
+                        </span>
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in items | filter: filter_items | orderBy: order_by: reverse | limitTo: options.page_size: page*options.page_size track by item[options.track_by || 'id']"
+                ng-class="{'active-pointer': options.clickable, 'all-bold': options.item_bold && options.item_bold(item)}" ng-show="items.length">
+                <td ng-repeat="clmn in options.columns track by clmn.header"
+                    width="{[{clmn.width}]}"
+                    ng-class="{'dropdown': clmn.menu}"
+                    ng-click="options.clickable && !clmn.checkbox && !clmn.menu && clmn.click && clmn.click(item)"
+                    title="{[{clmn.title ? clmn.title(item) : ''}]}">
+                    <a ng-if="clmn.menu"
+                       class="pull-left dropdown-toggle"
+                       data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-option-vertical"></span>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="opt in clmn.menu track by $index" ng-click="opt.action(item)">
+                                <a href ng-bind="opt.label"></a>
+                            </li>
+                        </ul>
+                    </a>
+                    <input class="form-check-input"
+                           type="checkbox" ng-model="item.selected"
+                           ng-change="onchangeSelection()" ng-if="clmn.checkbox">
+                    <div ng-if="!clmn.span_classes && !clmn.bold" ng-bind="clmn.value(item)"></div>
+                    <label ng-if="!clmn.span_classes && clmn.bold" ng-bind="clmn.value(item)"></label>
+                    <span ng-if="clmn.span_classes" ng-class="clmn.span_classes(item)" ng-bind="clmn.value(item)"></span>
+                </td>
+            </tr>
+            <tr><td class="center-block" ng-hide="items.length">Não há registros nessa tabela</td></tr>
+        </tbody>
+    </table>
+    <div class="pull-left" ng-hide="total_pages() < 2">Mostrando {[{showing_items()}]} de {[{(items | filter: filter_items).length}]}</div>
+    <div class="pull-right" ng-hide="total_pages() < 2">
+        <span ng-show="page" ng-click="previous_page()" class="glyphicon glyphicon-chevron-left"></span>
+        Página {[{page + 1}]} de {[{total_pages()}]}
+        <span ng-hide="page + 1 === total_pages()" ng-click="next_page()" class="glyphicon glyphicon-chevron-right"></span>
+    </div>
+</div>
