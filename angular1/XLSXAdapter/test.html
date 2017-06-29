@@ -1,0 +1,28 @@
+<script src="lib/angular1.6.1.min.js"></script>
+<script src="lib/js-xlsx.min.js"></script>
+<script src="lib/FileSaver.min.js"></script>
+<script src="XLSXAdapter.js"></script>
+
+<script>
+	var app = angular.module('app', ['xlsx_adapter']);
+	app.controller('AppCtrl', function($scope, XLSXAdapter){
+		var XL = XLSXAdapter;
+		var workbook = XL.createWorkbook(['worksheet']);
+		var worksheet = workbook.createWorkSheet('worksheet');
+		worksheet.setRange(5, 6);
+		for (var i = 1; i < 6; i++){
+			for (var j = 1, new_cell; j < 7; j++){
+				if ((i + j) % 2){
+					worksheet.setData(XL.createCell(i + j, 'number', ['bold', 'dark-green', 'center']), i, j);
+				} else {
+					worksheet.setData(XL.createCell(i + '-' + j, 'string', ['bold', 'italic', 'center']), i, j);
+				}
+			}
+		}
+		worksheet.mergeCells([1,1], [1,2]);
+		worksheet.setColumnsWidths([5,10,15,7,12,17]);
+		workbook.download('test');
+	});
+</script>
+
+<div ng-app="app"><div ng-controller="AppCtrl"></div></div>
