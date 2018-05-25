@@ -1,0 +1,12 @@
+{
+  "pages": {
+    "vpj": {
+      "path": "/vpj"
+    }
+  },
+  "extensions": {
+    "vpj": {
+      "component": "vpj"
+    }
+  }
+}
